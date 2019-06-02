@@ -1,7 +1,7 @@
 1. convert_tensor.py  
  将三维数组image(h,w,c)转换为四维数组Tensor(b,h,w,a), 其中 c=b*a, 当c<b*a时将数组补零.
  效果示例如下:
-![image](https://github.com/Nalilik/convert_tensor/blob/master/images/WechatIMG1099.jpeg)
+![image](https://github.com/Nalilik/convert_tensor/blob/master/images/WechatIMG1100.jpeg)
 
  不能直接用reshape是因为我们要保留图像数据的完整性, 这时直接进行切片操作即可:image_hwc[:,:,i]  
  输入h=2,w=2,c=5,a=2检查一下:  
