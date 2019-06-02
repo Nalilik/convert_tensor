@@ -1,4 +1,4 @@
-1. convert_tensor.py
+1. convert_tensor.py  
  将三维数组image(h,w,c)转换为四维数组Tensor(b,h,w,a), 其中 c=b*a, 当c<b*a时将数组补零.
  效果示例如下:
 ![image](https://github.com/Nalilik/convert_tensor/blob/master/images/WechatIMG1099.jpeg)
@@ -30,5 +30,9 @@ Tensor =
   [[14  0]
    [19  0]]]]  
 
- 转换成功.
-
+ 转换成功.  
+2. torch_tensor.py  
+在pytorch中, 我们可以用torch自带的to_tensor()将image(h,w,c)转换为image(c,w,h),之后再由DataLoader(train_data, batch_size=n,shuffle=True)实现Tensor的转换.  
+输入: batch_size=16, BosphorusDB数据库的115张人脸图像  
+输出:  
+torch.Size([16, 3, 224, 224]) torch.Size([16])
