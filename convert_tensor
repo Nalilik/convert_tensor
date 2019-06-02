@@ -1,0 +1,41 @@
+import numpy as np
+
+h = int(input())
+w = int(input())
+c = int(input())
+a = int(input())
+image = np.arange(h*w*c)
+image = image.reshape((h,w,c))
+
+
+def convert_tensor(image_hwc):
+
+    h, w, c = image_hwc.shape
+    # a = 3
+    if c % a == 0:
+        b = c // a
+        image_bhwa = np.zeros((h * w * c)).reshape((b, h, w, a))
+        for i in range(b):
+            image_bhwa[i, :, :, :] = image_hwc[:, :, a * i:a * i + a]
+    else:
+        m = c % a
+        b = (c - m) // a + 1
+        image_bhwa = np.zeros((h * w * b * a)).reshape((b, h, w, a))
+        for i in range(b - 1):
+            # a1 = a+3
+            image_bhwa[i, :, :, :] = image_hwc[:, :, a * i:a * i + a]
+        image_bhwa[b - 1, :, :, 0:m] = image_hwc[:, :, c - m:c]
+        # add padding
+        image_bhwa[b - 1, :, :, m:a] = np.zeros(((a - m) * h * w)).reshape((h, w, a - m))
+    return image_bhwa
+
+
+tensor = convert_tensor(image)
+print(image.shape)
+print(tensor.shape)
+
+
+
+
+
+
