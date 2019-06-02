@@ -1,0 +1,66 @@
+import os,dill,cv2
+import torch
+from torch.utils.data import Dataset, DataLoader
+from torchvision import transforms, utils
+
+
+bosphorusDB_root = '/Users/nana/Desktop/Dissertation/Dataset/BosphorusDB_prepared/20171117_rotated/'
+
+gallery_cam = 'N'
+# query_cams = ['R10', 'R20', 'R30', 'R45', 'L45']
+# query_cams = ['Happy', 'Surprise', 'Fear', 'Sadness', 'Anger', 'Disgust']
+
+query_cams = ['R10', 'R20', 'R30', 'R45', 'L45', 'Happy', 'Surprise', 'Fear', 'Sadness', 'Anger', 'Disgust']
+
+
+result_root = '../../Sphereface_output/'
+if not os.path.exists(result_root):
+    os.makedirs(result_root)
+
+# load faces
+gallery_data = dill.load(open('{}BosphorusDB_{}_20171117.pkl'.format(bosphorusDB_root, gallery_cam), "rb"))
+data = gallery_data
+faces = data['faces']
+id = data['labels']
+
+normalize = transforms.Normalize(
+    mean=[0.485, 0.456, 0.406],
+    std=[0.229, 0.224, 0.225]
+)
+preprocess = transforms.Compose([
+    #transforms.Scale(256),
+    #transforms.CenterCrop(224),
+    transforms.ToTensor(),
+    normalize
+])
+
+def default_loader(ind):
+    img_pil =  faces[ind]
+    face_img = cv2.resize(img_pil, dsize=(224, 224), interpolation=cv2.INTER_CUBIC)
+    # convert to image(C,H,W)
+    img_tensor = preprocess(face_img)
+    return img_tensor
+
+class faceset(Dataset):
+    def __init__(self, loader=default_loader):
+        self.images = faces
+        self.target = id
+        self.loader = loader
+
+    def __getitem__(self, index):
+        fn = self.images[index]
+        target = self.target[index]
+        img = self.loader(target)
+        return img,target
+
+    def __len__(self):
+        return len(self.images)
+
+train_data  = faceset()
+n=16
+trainloader = DataLoader(train_data, batch_size=n,shuffle=True)
+print(type(trainloader))
+dataiter = iter(trainloader)
+images, labels = dataiter.next()
+print(type(images),type(labels))
+print(images.size(),labels.size())
