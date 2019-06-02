@@ -4,7 +4,8 @@
 ![image](https://github.com/Nalilik/convert_tensor/blob/master/images/WechatIMG1100.jpeg)
 
  不能直接用reshape是因为我们要保留图像数据的完整性, 这时直接进行切片操作即可:image_hwc[:,:,i]  
- 输入h=2,w=2,c=5,a=2检查一下:  
+ 输入h=2,w=2,c=5,a=2    
+ 输出:    
  image =  
 [[[ 0  1  2  3  4]
   [ 5  6  7  8  9]]
